@@ -64,7 +64,7 @@ public class TypeParameterResolver {
 
   /**
    * Resolve param types.
-   *
+   * 解析方法参数的类型数组
    * @param method
    *          the method
    * @param srcType
@@ -74,7 +74,9 @@ public class TypeParameterResolver {
    *         they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type[] resolveParamTypes(Method method, Type srcType) {
+    // 获得方法参数类型数组
     Type[] paramTypes = method.getGenericParameterTypes();
+    // 定义的类
     Class<?> declaringClass = method.getDeclaringClass();
     Type[] result = new Type[paramTypes.length];
     for (int i = 0; i < paramTypes.length; i++) {
@@ -83,6 +85,14 @@ public class TypeParameterResolver {
     return result;
   }
 
+  /**
+   * 解析类型
+   *
+   * @param type 类型
+   * @param srcType 来源类型
+   * @param declaringClass 定义的类
+   * @return 解析后的类型
+   */
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
     if (type instanceof TypeVariable) {
       return resolveTypeVar((TypeVariable<?>) type, srcType, declaringClass);
@@ -95,6 +105,14 @@ public class TypeParameterResolver {
     }
   }
 
+  /**
+   * 解析 ParameterizedType 类型
+   *
+   * @param parameterizedType ParameterizedType 类型
+   * @param srcType 来源类型
+   * @param declaringClass 定义的类
+   * @return 解析后的类型
+   */
   private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type srcType, Class<?> declaringClass) {
     Type componentType = genericArrayType.getGenericComponentType();
     Type resolvedComponentType = null;
