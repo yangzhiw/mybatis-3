@@ -1,17 +1,17 @@
 /**
- *    Copyright 2009-2020 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2020 the original author or authors.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.reflection;
 
@@ -27,51 +27,59 @@ import java.util.Arrays;
 
 /**
  * @author Iwao AVE!
+ * 工具类，java.lang.reflect.Type
+ * TypeParameterResolver 暴露了三个 公用静态方法，分别用于解析 Field 类型、Method 返回类型、方法参数类型
  */
 public class TypeParameterResolver {
 
   /**
    * Resolve field type.
+   * 解析属性类型
    *
-   * @param field
-   *          the field
-   * @param srcType
-   *          the src type
+   * @param field   the field
+   * @param srcType the src type
+   *
    * @return The field type as {@link Type}. If it has type parameters in the declaration,<br>
-   *         they will be resolved to the actual runtime {@link Type}s.
+   * they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type resolveFieldType(Field field, Type srcType) {
+    // 属性类型
     Type fieldType = field.getGenericType();
+    // 定义的类
     Class<?> declaringClass = field.getDeclaringClass();
+    // 定义的类
     return resolveType(fieldType, srcType, declaringClass);
   }
 
   /**
    * Resolve return type.
+   * 解析方法返回类型
    *
-   * @param method
-   *          the method
-   * @param srcType
-   *          the src type
+   * @param method  the method
+   * @param srcType the src type
+   *
    * @return The return type of the method as {@link Type}. If it has type parameters in the declaration,<br>
-   *         they will be resolved to the actual runtime {@link Type}s.
+   * they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type resolveReturnType(Method method, Type srcType) {
+    // 属性类型
     Type returnType = method.getGenericReturnType();
+    // 定义的类
     Class<?> declaringClass = method.getDeclaringClass();
+    // 定义的类
     return resolveType(returnType, srcType, declaringClass);
   }
 
   /**
    * Resolve param types.
    * 解析方法参数的类型数组
-   * @param method
-   *          the method
-   * @param srcType
-   *          the src type
+   *
+   * @param method  the method
+   * @param srcType the src type
+   *
    * @return The parameter types of the method as an array of {@link Type}s. If they have type parameters in the
-   *         declaration,<br>
-   *         they will be resolved to the actual runtime {@link Type}s.
+   * declaration,<br>
+   * they will be resolved to the actual runtime {@link Type}s.
    */
   public static Type[] resolveParamTypes(Method method, Type srcType) {
     // 获得方法参数类型数组
@@ -88,9 +96,10 @@ public class TypeParameterResolver {
   /**
    * 解析类型
    *
-   * @param type 类型
-   * @param srcType 来源类型
+   * @param type           类型
+   * @param srcType        来源类型
    * @param declaringClass 定义的类
+   *
    * @return 解析后的类型
    */
   private static Type resolveType(Type type, Type srcType, Class<?> declaringClass) {
@@ -108,9 +117,10 @@ public class TypeParameterResolver {
   /**
    * 解析 ParameterizedType 类型
    *
-   * @param parameterizedType ParameterizedType 类型
-   * @param srcType 来源类型
-   * @param declaringClass 定义的类
+   * @param genericArrayType  类型
+   * @param srcType           来源类型
+   * @param declaringClass    定义的类
+   *
    * @return 解析后的类型
    */
   private static Type resolveGenericArrayType(GenericArrayType genericArrayType, Type srcType, Class<?> declaringClass) {
@@ -130,6 +140,14 @@ public class TypeParameterResolver {
     }
   }
 
+  /**
+   * 解析 ParameterizedType 类型
+   *
+   * @param parameterizedType ParameterizedType 类型
+   * @param srcType 来源类型
+   * @param declaringClass 定义的类
+   * @return 解析后的类型
+   */
   private static ParameterizedType resolveParameterizedType(ParameterizedType parameterizedType, Type srcType, Class<?> declaringClass) {
     Class<?> rawType = (Class<?>) parameterizedType.getRawType();
     Type[] typeArgs = parameterizedType.getActualTypeArguments();
@@ -248,7 +266,7 @@ public class TypeParameterResolver {
         newParentArgs[i] = parentTypeArgs[i];
       }
     }
-    return noChange ? parentType : new ParameterizedTypeImpl((Class<?>)parentType.getRawType(), null, newParentArgs);
+    return noChange ? parentType : new ParameterizedTypeImpl((Class<?>) parentType.getRawType(), null, newParentArgs);
   }
 
   private TypeParameterResolver() {

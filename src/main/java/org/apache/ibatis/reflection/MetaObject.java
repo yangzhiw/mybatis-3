@@ -1,17 +1,17 @@
 /**
- *    Copyright 2009-2019 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2019 the original author or authors.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.reflection;
 
@@ -32,7 +32,11 @@ import org.apache.ibatis.reflection.wrapper.ObjectWrapperFactory;
  */
 public class MetaObject {
 
+  /**
+   *  原始 Object 对象
+   */
   private final Object originalObject;
+
   private final ObjectWrapper objectWrapper;
   private final ObjectFactory objectFactory;
   private final ObjectWrapperFactory objectWrapperFactory;
@@ -47,16 +51,33 @@ public class MetaObject {
     if (object instanceof ObjectWrapper) {
       this.objectWrapper = (ObjectWrapper) object;
     } else if (objectWrapperFactory.hasWrapperFor(object)) {
+
+      // 创建 ObjectWrapper 对象
       this.objectWrapper = objectWrapperFactory.getWrapperFor(this, object);
     } else if (object instanceof Map) {
+
+      // 创建 MapWrapper 对象
       this.objectWrapper = new MapWrapper(this, (Map) object);
     } else if (object instanceof Collection) {
+
+      // 创建 CollectionWrapper 对象
       this.objectWrapper = new CollectionWrapper(this, (Collection) object);
     } else {
+
+      // 创建 BeanWrapper 对象
       this.objectWrapper = new BeanWrapper(this, object);
     }
   }
 
+  /**
+   * 创建 MetaObject 对象
+   *
+   * @param object 原始 Object 对象
+   * @param objectFactory
+   * @param objectWrapperFactory
+   * @param reflectorFactory
+   * @return MetaObject 对象
+   */
   public static MetaObject forObject(Object object, ObjectFactory objectFactory, ObjectWrapperFactory objectWrapperFactory, ReflectorFactory reflectorFactory) {
     if (object == null) {
       return SystemMetaObject.NULL_META_OBJECT;
@@ -124,8 +145,11 @@ public class MetaObject {
   }
 
   public void setValue(String name, Object value) {
+    // 创建 PropertyTokenizer 对象，对 name 分词
     PropertyTokenizer prop = new PropertyTokenizer(name);
     if (prop.hasNext()) {
+
+      // 创建 MetaObject 对象
       MetaObject metaValue = metaObjectForProperty(prop.getIndexedName());
       if (metaValue == SystemMetaObject.NULL_META_OBJECT) {
         if (value == null) {
@@ -142,7 +166,11 @@ public class MetaObject {
   }
 
   public MetaObject metaObjectForProperty(String name) {
+
+    // 获得属性值
     Object value = getValue(name);
+
+    // 创建 MetaObject 对象
     return MetaObject.forObject(value, objectFactory, objectWrapperFactory, reflectorFactory);
   }
 
